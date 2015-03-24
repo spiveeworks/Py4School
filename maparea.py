@@ -9,6 +9,10 @@ class area:
 	terraindict = " ,.;";
 	width = 16;
 	height = 16;
+	
+	#Scale map attributes; should be separated into another class but cbf
+	scale = [[]];
+	scaleupdate = lambda s, x, y: None;
 
 	def __init__ (self, tile = 0):
 		# Terrain
@@ -18,10 +22,10 @@ class area:
 			blank.append(tile);
 		for row in range(area.height):
 			self.terrain.append(blank);
+		self.symbol = area.terraindict[tile];
 		
 		# Objects
 		self.access = {};
-
 	def fulldisplay(self):
 		out = [];
 		y = 0;
@@ -53,6 +57,7 @@ class area:
 			for el in range(area.width):
 				line.append(random.choice(options));
 			self.terrain[row] = line;
+		self.symbol = random.choice(options);
 	# ~ #
 	def randomise(options): #For initial generation, when blank areas are useless.
 		self = area();
@@ -61,6 +66,7 @@ class area:
 			for el in range(area.width):
 				line.append(random.choice(options));
 			self.terrain[row] = line;
+		self.symbol = random.choice(options);
 		return self;
 	# ~ #
 

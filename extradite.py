@@ -1,7 +1,8 @@
-import random
+import random;
 
-from mapobject import *
-from maparea import *
+from mapobject import *;
+from maparea import *;
+import misc;
 
 class item:
 	symbols = { # Each key refers to the itemtype, and each value is a string in which characters refer to symbols of itemvariants of that index.
@@ -39,28 +40,47 @@ class character:
 			return (self.obj, self.loc);
 	def __init__ (self, region, charobj, charloc):
 		self.objset = {0 : character.wrapobject(charobj, charloc)};
+		self.markers = {};
 		self.setfocus(region, charloc);
 	def remove(self, id):
 		obj, coord = self.objset[id].data();
 		areain.removeobject (obj, coord);
 		del self.objset[id];
 		return obj;
-	def setfocus(self, region, newloc):
+	def setfocus(self, region, newloc): 
+		"""\
+			DO NOT USE THIS FUNCTION. USE character.changefocus(self, region, newloc) INSTEAD.
+		"""
 		if region not in map:
-			map[region] = area.randomise(options = [1,2]);
+			toad = area.randomise(options = [1,2]);
+			area.scaleupdate(toad.symbol, *region);
+			map[region] = toad;
+		if region in self.markers:
+			self.markers[region] += '@';
+		else:
+			self.markers[region] = "@";
 		self.region = region;
 		self.area = map[region];
 		self.objnum = 1;
 		self.objset = {0 : self.objset[0]};
 		i = 1;
-		for loc, obj in self.area.access.items():
-			self.objset[i] = character.wrapobject(obj, loc);
-			i += 1;
+		for loc, content in self.area.access.items():
+			for obj in content:
+				self.objset[i] = character.wrapobject(obj, loc);
+				i += 1;
 		self.area.addobject(*self.objset[0].data());
 		return self.area;
-	def changefocus(self, **kwargs):
+	def changefocus(self, *args, **kwargs):
 		self.area.removeobject(*self.objset[0].data());
-		return self.setfocus(**kwargs);
+		newmarks = "";
+		for i in self.markers[self.region]:
+			if i != '@':
+				newmarks += i;
+		if newmarks == "":
+			del self.markers[self.region];
+		else:
+			self.markers[self.region] = newmarks;
+		return self.setfocus(*args, **kwargs);
 	
 	def move(self, newloc, subject = 0):
 		self.area.moveobject(*self.objset[0].data(), coto = newloc);
@@ -68,14 +88,16 @@ class character:
 # ~ #
 
 def getvect(words):
-	if words[0] == "north":
+	arg = words.pop();
+	if arg == "north":
 		return (0, -1);
-	elif words[0] == "south":
+	elif arg == "south":
 		return (0, +1);
-	elif words[0] == "east":
+	elif arg == "east":
 		return (+1, 0);
-	elif words[0] == "west":
+	elif arg == "west":
 		return (-1, 0);
+	print ("Enter a travel direction: north, south, east or west.");
 	return (0, 0);
 # ~ #
 
@@ -89,36 +111,52 @@ map = {};
 player = character(region = (0,0), charobj = obj_body(symbol = 1), charloc = randcoord());
 player.area.addobject (object = item((0, 0, 0)).makeobj(), coord = randcoord());
 
+area.scale = misc.drawmap(map, -7, -7, 15, 15);
+area.scaleupdate = lambda s, x, y: misc.updatemap(area.scale, -7, -7, s, x, y);
+
 def printregion ():
+	newscale = misc.assemblemap(player.markers, area.scale, -7, -7);
+	for i in newscale:
+		print(i);
 	out = player.area.fulldisplay();
 	for i in out:
 		print (i);
 # ~ #
 
-printregion ();
+class command:
+	def move(words):
+		newco = randcoord();
+		player.move(newco);
+
+	def travel(words):
+		newreg = sumvect(left = player.region, right = getvect(words));
+		player.changefocus(region = newreg, newloc = randcoord());
+
+	def spawn(words):
+		player.area.addobject(item((0, 0, 0)).makeobj(), randcoord());
+	
+	def debug(words):
+		print(player.markers);
+		print ("SCALE MAP:")
+		for i in area.scale:
+			print(i);
+command_set = { "move" : command.move, "travel" : command.travel, "spawn" : command.spawn, "debug" : command.debug };
+# ~ #
 
 while True:
+	printregion();
 	inline = "";
+	parse = [""];
 	while inline == "":
 		inline = input("> ");
 	parse = inline.split();
-	try:
-		if parse[0] == "move":
-			newco = randcoord();
-			player.move(newco);
-			charloc = newco;
-		elif parse[0] == "travel":
-			del parse[0];
-			newreg = sumvect(left = player.region, right = getvect(parse));
-			player.changefocus(region = newreg, newloc = randcoord());
-		elif parse[0] == "spawn":
-			del parse[0];
-			player.area.addobject(item((0, 0, 0)).makeobj(), randcoord());
-		elif parse[0] == "exit":
-			break;
-	except IndexError:
-		pass;
-	
-	printregion();
+	parse.reverse();
+	bit = parse.pop();
+	if bit == "exit":
+		break;
+	elif bit in command_set:
+		command_set[bit](parse);
+	else:
+		print ("Try again. \n");
 # ~ #
 
