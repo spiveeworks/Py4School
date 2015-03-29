@@ -10,7 +10,7 @@ class area:
 	width = 16;
 	height = 16;
 	
-	#Scale map attributes; should be separated into another class but cbf
+	#Scale world attributes; should be separated into another class but cbf
 	scale = [[]];
 	scaleupdate = lambda s, x, y: None;
 
