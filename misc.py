@@ -24,21 +24,21 @@ Slight slight bias towards the first argument in a battle...
 
 
 
-def drawmap (map, Cx, Cy, wid, hei): #  Where map[Cx, Cy] refers to the area in the toppest leftest corner.
+def drawmap (world, Cx, Cy, wid, hei): #  Where world[Cx, Cy] refers to the area in the toppest leftest corner.
 	BCx = Cx + wid;
 	BCy = Cy + hei;
 	display = [];
 	for y in range(Cy, BCy):
 		row = [];
 		for x in range(Cx, BCx):
-			if (x, y) in map: 
-				row.append(map[x, y].symbol); 
+			if (x, y) in world: 
+				row.append(world[x, y].symbol); 
 			else: 
 				row.append(0);
 		display.append(row);
 	return display;
 
-#  drawmap (map, -9, -9, 21, 21); # gives a base map upon which things like goal or @ can be added
+#  drawmap (map, -9, -9, 21, 21); # gives a base world upon which things like goal or @ can be added
 
 def assemblemap(overlay, display, Cx, Cy):
 	ret = [];
@@ -68,7 +68,6 @@ def updatemap(display, Cx, Cy, symbol, xI, yI):
 		return None;
 	display[yI-Cx][xI-Cx] = symbol;
 
-	
 
 """
 map(func, argset1, argset2...)
