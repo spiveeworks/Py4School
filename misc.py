@@ -74,7 +74,7 @@ def updatemap(display, Cx, Cy, symbol, xI, yI):
 
 
 
-enchoice = ["Nymph"]
+enchoice = ["Nymph", "Wolf", "Goblin", "Colossal Fruitbat", "Zebra Wizard", ]
 weppresets = [
     {'name' : "Axe", 
         'itemtype' : 1, 
