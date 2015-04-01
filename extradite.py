@@ -117,7 +117,6 @@ def sumvect(left, right):
 world = {}; #  Maps (x, y) tuples as keys to maparea.area objects as values, meaning unexplored areas do not take up any memory.
 bod = obj_body();
 player = character(); #  all default arguments are used for the start of the game.
-player.body.maininv.append(item("Generic"));
 area.scale = misc.drawmap(world, -7, -7, 15, 15);  # start with a world drawn 7 cells out from the centre in all directions
 area.scaleupdate = lambda s, x, y: misc.updatemap(area.scale, -7, -7, s, x, y);  # create a lambda function that calls a more complicated function, but with some default arguments.
 
