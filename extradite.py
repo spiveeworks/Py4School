@@ -4,6 +4,9 @@ from mapobject import *;
 from maparea import *;
 import misc;
 
+# Due to a rather bad term, I really don't have the time/energy to comment this properly. 
+# Some parts were given comments as I tried to understand them myself, but otherwise:
+#               APOLOGIES :( :( :(
 
 class character:
     def __init__(self, chararg = None, region = (0, 0), locarg = None):
