@@ -104,6 +104,7 @@ class obj_body (obj_base):
         rat -= int(rat);
         if random.uniform(0.0, 1.0) <= rat:
             self.xp += 1;
+        self.clean();
     def describe (self):
         if self.iskilled:
             return self.name + " (DEAD)"
