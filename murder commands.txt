@@ -1,0 +1,20 @@
+
+BEGIN attack_command
+    CALL findobj(<such that object's name equals args and object is living creature>)
+    IF valid object is found
+        errOut: "Not found"
+    ELSE
+        CALL simulatebattle(own body, enemy body)
+        IF you died
+            errOut: "Conquered by " + grue
+END
+
+BEGIN loot_command(args)
+    CALL findobj(<such that object's name equals args and object is a dead body>)
+    IF valid object is found
+        errOut: "Not found"
+    ELSE
+        copy body's inventory into your own
+        add weapon to inventory
+        remove object from map
+END
