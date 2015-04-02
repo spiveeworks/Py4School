@@ -1,0 +1,49 @@
+
+BEGIN findobj(condition)
+    retrieve nearby objects
+    Filter out unwanted objects using condition
+    IF any are available
+        Return one selected at random, alongside id and/or location
+    ELSE
+        Return void
+END
+
+BEGIN look_command
+    CALL findobj(<such that object is not the character>)
+        IF object's location equals current location
+            Store as under
+        ELSE
+            Store as around
+    sOut: "Under you"
+    print each item marked as under
+    sOut: "Elsewhere"
+    print each item marked as around
+END
+
+BEGIN move_command WITH verbal arguments
+    IF no arg is given
+        get a random destination
+    ELIF next word is "to"
+        CALL findobj(<such that the object's name equals args>)
+        IF valid object is found
+            destination is this object's location
+        ELSE:
+            no destination
+            errOut: "Not found"
+    ELSE:
+        no destination
+        errOut: "Syntax"
+    move player to destination
+END
+
+BEGIN travel_command WITH verbal arguments
+    CASEWHERE (args)
+    CASE 'north'
+        y -= 1
+    CASE 'south'
+        y += 1
+    CASE 'east'
+        x += 1
+    CASE 'west'
+        x -= 1
+END
