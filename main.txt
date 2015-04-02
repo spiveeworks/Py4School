@@ -1,0 +1,41 @@
+
+BEGIN render
+    place markers on (copy of) terrain map
+    print this world map to screen
+    place objects and floor tiles on regional map
+    print this region map to screen
+    display health versus maximum health
+    display current level
+    display previously saved error
+END
+
+
+BEGIN fulldisplay OF region
+    FOR every element (x, y) in grid
+        IF any objects are in this location
+            save the symbol associated with one of them
+        ELSE
+            save the symbol associated with the terrain there
+    return each constructed line of symbols
+END
+
+
+BEGIN main
+    WHILE not dead
+        CALL render
+        WHILE user hasn't entered anything
+            ask for input
+        get first token
+        IF token equals "exit"
+            break loop
+        ELIF token is a valid command
+            CALL respective function
+            save error message for later
+        ELSE
+            set error message: "Try again"
+    IF loop finished due to death
+        CALL render
+        sOut: "You died :("
+    sOut: "Execution complete. "
+    wait for user to terminate program.
+END
