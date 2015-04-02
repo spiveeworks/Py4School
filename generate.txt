@@ -1,0 +1,32 @@
+
+
+BEGIN build_character WITH level and stats
+    Save max health at double the level, plus three (2x + 3)
+    SET health to max health (full)
+    SET xp to 0
+    record stats
+END
+
+BEGIN make some enemies
+    choose a random number of enemies (1 through 5)
+    calculate level of enemies: taxicab distance from starting region, floored division over number of enemies
+    choose a species name to use
+    FOR each enemy-to-be
+        create enemy with chosen name (note all 5 or so will have the same name)
+        choose a random weapon preset
+        give a random potion preset to inventory
+    return enemies
+END
+
+BEGIN generate region WITH terrain characters and some objects to place
+    FOR each element in grid-to-be (from top left corner until bottom right)
+        choose a terrain character at random, to copy to that element
+    FOR each object to be placed
+        place object at a random coordinate
+    pick a terrain character at random to display on world map.
+END
+
+
+
+
+
