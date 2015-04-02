@@ -1,0 +1,44 @@
+
+BEGIN view_command
+    sOut: "You possess the following: "
+    FOR each item in inventory
+        print item name
+END
+
+BEGIN pickup_command(args)
+    CALL findobj(<such that object's name equals args and object is an item>)
+    IF valid object is found
+        errOut: "Not found"
+    ELSE
+        set location to object's location
+        add itemdata to inventory
+        remove object from map
+END
+
+BEGIN equip_command WITH args
+    FOR each item in inventory
+        IF item is a weapon, AND item name equals args
+            IF item is strongest item seen so far
+                record item as strongest
+    IF no such item was found
+        errOut: "No item found"
+    ELSE
+        move item to 'weapon' slot (deleting from inventory)
+END
+
+BEGIN drink_command WITH args
+    find first potion item whose name equals args
+    IF none is found
+        errOut: "No item found"
+    ELSE
+        apply potion effects to player
+        remove potion from inventory
+END
+
+BEGIN drop_command WITH args
+    find first item whose name equals args
+    IF none is found
+        errOut: "No item found"
+    ELSE
+        place item as item-object on map, at coordinates of player
+END
