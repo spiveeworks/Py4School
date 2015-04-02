@@ -1,0 +1,31 @@
+
+BEGIN simulate battle WITH offense and defense
+    WHILE both still alive
+        get next to attack
+        CALL attack
+        queue attacker's next attack
+    return is offendor still alive?
+END
+
+
+BEGIN attack WITH attacker and opponent
+    reduce opponent's health by attacker's weapon stat
+    IF oponent has no more HP left
+        mark opponent as dead
+        CALL givexp WITH level of opponent
+END
+
+
+
+BEGIN givexp OF creature WITH level of enemy killed
+    find ratio of the level killed as to victor's level
+    increase xp by floor of this ratio (the whole part of the number)
+    IF randomly decided to happen: <such that the higher the fractional part of the ratio is, the more likely a success is>
+        increase xp by one more
+    WHILE xp more than four
+        reduce xp by four
+        increase level by one
+    FOR each level gained
+        increase max health (but not health itself) by 2*lvup
+END
+
